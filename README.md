@@ -1,8 +1,12 @@
 <h1 align="center">Hi 👋, I'm Gian</h1>
-<h3 align="center">A developer from Swizerland</h3>
 
-<p align="center"> <img src="https://komarev.com/ghpvc/?username=gian-z&label=Profile%20views&color=0e75b6&style=flat" alt="gian-z" /> </p>
-<p align="center"> <img align="center" src="https://github-readme-stats.vercel.app/api/top-langs?username=gian-z&show_icons=true&locale=en&layout=compact" alt="gian-z" /> </p>
+<p align="left"> <img src="https://komarev.com/ghpvc/?username=gian-z&label=Profile%20views&color=0e75b6&style=flat" alt="gian-z" /> </p>
+<span>
+  <img align="center" src="https://github-readme-stats.vercel.app/api?username=gian-z&count_private=true&show_icons=true&theme=github_dark&hide=stars" />
+</span>
+<span>
+  <img align="center" src="https://github-readme-stats.vercel.app/api/top-langs?username=gian-z&layout=compact&theme=github_dark&langs_count=8" />
+</span>
 
 
 
