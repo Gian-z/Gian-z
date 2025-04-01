@@ -21,7 +21,7 @@ return {
             diagnostics_indicator = function(_, _, diagnostics_dict, _)
                 local s = " "
                 for e, n in pairs(diagnostics_dict) do
-                    local sym = e == "error" and Ice.symbols.Error or (e == "warning" and symbols.Warn or symbols.Info)
+                    local sym = e == "error" and Ice.symbols.Error or (e == "warning" and Ice.symbols.Warn or Ice.symbols.Info)
                     s = s .. n .. sym
                 end
                 return s

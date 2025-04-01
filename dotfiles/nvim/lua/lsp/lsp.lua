@@ -24,8 +24,7 @@ Ice.plugins["flutter-tools"] = {
                 require("lsp.utils").lsp_attach_keymap(bufnr)
             end,
         },
-    },
-    enabled = Ice.lsp.flutter.enabled,
+    }
 }
 
 Ice.plugins["rust-tools"] = {
@@ -39,8 +38,7 @@ Ice.plugins["rust-tools"] = {
                 require("lsp.utils").lsp_attach_keymap(bufnr)
             end,
         },
-    },
-    enabled = Ice.lsp.rust.enabled,
+    }
 }
 
 Ice.plugins["typst-preview"] = {
@@ -59,8 +57,7 @@ Ice.plugins["typst-preview"] = {
             silent = true,
             noremap = true,
         },
-    },
-    enabled = Ice.lsp.tinymist.enabled,
+    }
 }
 
 Ice.plugins.mason = {

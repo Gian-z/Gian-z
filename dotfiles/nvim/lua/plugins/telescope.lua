@@ -43,13 +43,13 @@ return {
     },
     config = function(_, opts)
         local telescope = require "telescope"
-        telescope.setup(opts)
+        telescope.setup(opinits)
         telescope.load_extension "fzf"
         telescope.load_extension "env"
     end,
     keys = {
         { "<leader>tf", "<Cmd>Telescope find_files<CR>", desc = "find file", silent = true, noremap = true },
-        { "<leader>t<C-f>", "<Cmd>Telescope live_grep<CR>", desc = "live grep", silent = true, noremap = true },
+        { "<leader>tg", "<Cmd>Telescope live_grep<CR>", desc = "live grep", silent = true, noremap = true },
         { "<leader>te", "<Cmd>Telescope env<CR>", desc = "environment variables", silent = true, noremap = true },
     },
 }

@@ -8,6 +8,6 @@ return {
         keys = "fjghdksltyrueiwoqpvbcnxmza",
     },
     keys = {
-        { "<leader>hp", "<Cmd>HopWord<CR>", desc = "hop word", silent = true, noremap = true },
+        { "<leader>h", "<Cmd>HopWord<CR>", desc = "hop word", silent = true, noremap = true },
     },
 }

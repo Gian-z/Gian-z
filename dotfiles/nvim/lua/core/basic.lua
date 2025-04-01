@@ -17,7 +17,7 @@ opt.sidescrolloff = math.floor((win_height - 1) / 2)
 opt.number = true
 opt.relativenumber = true
 
-opt.cursorline = true
+opt.cursorline = false
 
 opt.signcolumn = "yes"
 

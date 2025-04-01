@@ -36,6 +36,7 @@ config.comment = require "plugins.comment"
 config.dashboard = require "plugins.dashboard"
 config.gitsigns = require "plugins.gitsigns"
 config.hop = require "plugins.hop"
+config.floaterm = require "plugins.floaterm"
 
 config["grug-far"] = {
     "MagicDuck/grug-far.nvim",
@@ -52,32 +53,6 @@ config["grug-far"] = {
 config["indent-blankline"] = require "plugins.blankline"
 config.lualine = require "plugins.lualine"
 config["markdown-preview"] = require "plugins.md-preview"
-
-config.neogit = {
-    "NeogitOrg/neogit",
-    dependencies = "nvim-lua/plenary.nvim",
-    main = "neogit",
-    opts = {
-        disable_hint = true,
-        status = {
-            recent_commit_count = 30,
-        },
-        commit_editor = {
-            kind = "auto",
-            show_staged_diff = false,
-        },
-    },
-    keys = {
-        { "<leader>gt", "<Cmd>Neogit<CR>", desc = "neogit", silent = true, noremap = true },
-    },
-    config = function(_, opts)
-        require("neogit").setup(opts)
-        Ice.ft.NeogitCommitMessage = function()
-            vim.api.nvim_win_set_cursor(0, { 1, 0 })
-        end
-    end,
-}
-
 config.neoscroll = require "plugins.neoscroll"
 
 config.nui = {
@@ -101,23 +76,9 @@ config["nvim-notify"] = {
         stages = "static",
     },
     config = function(_, opts)
-        ---@diagnostic disable-next-line: undefined-field
         require("notify").setup(opts)
         vim.notify = require "notify"
     end,
-}
-
-config["nvim-scrollview"] = {
-    "dstein64/nvim-scrollview",
-    event = "User IceLoad",
-    main = "scrollview",
-    opts = {
-        excluded_filetypes = { "nvimtree" },
-        current_only = true,
-        winblend = 75,
-        base = "right",
-        column = 1,
-    },
 }
 
 config["nvim-transparent"] = require "plugins.transparent"
@@ -127,6 +88,7 @@ config.telescope = require "plugins.telescope"
 config["todo-comments"] = require "plugins.todo"
 config.undotree = require "plugins.undotree"
 config["which-key"] = require "plugins.whichkey"
+config.lazygit = require "plugins.lazygit"
 
 config.surround = {
     "kylechui/nvim-surround",
@@ -135,35 +97,13 @@ config.surround = {
     event = "User IceLoad",
 }
 
--- Colorschemes
-config["ayu"] = {
-    "Luxed/ayu-vim",
-    lazy = true,
-}
-
-config["github"] = {
-    "projekt0n/github-nvim-theme",
-    lazy = true,
-}
-
-config["gruvbox"] = {
-    "ellisonleao/gruvbox.nvim",
-    lazy = true,
-}
-
-config["kanagawa"] = {
-    "rebelot/kanagawa.nvim",
-    lazy = true,
-}
-
-config["nightfox"] = {
-    "EdenEast/nightfox.nvim",
-    lazy = true,
-}
-
 config["tokyonight"] = {
     "folke/tokyonight.nvim",
     lazy = true,
+}
+
+config["cheatsheet"] = {
+    "sudormrfbin/cheatsheet.nvim"
 }
 
 Ice.plugins = config

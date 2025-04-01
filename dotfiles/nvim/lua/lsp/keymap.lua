@@ -34,6 +34,6 @@ Ice.keymap.lsp.cmp = {
     prev_item = "<C-k>",
     next_item = "<C-j>",
     confirm = "<Tab>",
-    doc_up = "<C-u>",
-    doc_down = "<C-d>",
+    doc_up = "<Up>",
+    doc_down = "<Down>",
 }

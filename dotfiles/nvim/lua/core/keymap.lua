@@ -1,54 +1,7 @@
+local ext = require("core.keyextensions")
+
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
-
--- Open the current html file with the default browser.
-local function open_html_file()
-    if vim.bo.filetype == "html" then
-        local utils = require "core.utils"
-        local command
-        if utils.is_linux() or utils.is_wsl() then
-            command = "xdg-open"
-        elseif utils.is_windows() then
-            command = "explorer"
-        else
-            command = "open"
-        end
-        if require("core.utils").is_windows() then
-            local old_shellslash = vim.opt.shellslash
-            vim.opt.shellslash = false
-            vim.api.nvim_command(string.format('silent exec "!%s %%:p"', command))
-            vim.opt.shellslash = old_shellslash
-        else
-            vim.api.nvim_command(string.format('silent exec "!%s %%:p"', command))
-        end
-    end
-end
-
--- When evoked under normal / insert / visual mode, call vim's `undo` command and then go to normal mode.
-local function undo()
-    local mode = vim.api.nvim_get_mode().mode
-
-    -- Only undo in normal / insert / visual mode
-    if mode == "n" or mode == "i" or mode == "v" then
-        vim.cmd "undo"
-        -- Back to normal mode
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
-    end
-end
-
--- Determine in advance what shell to use for the <C-t> keymap
-local terminal_command
-if not require("core.utils").is_windows() then
-    terminal_command = "<Cmd>split | terminal<CR>" -- let $SHELL decide the default shell
-else
-    local executables = { "pwsh", "powershell", "bash", "cmd" }
-    for _, executable in require("core.utils").ordered_pair(executables) do
-        if vim.fn.executable(executable) == 1 then
-            terminal_command = "<Cmd>split term://" .. executable .. "<CR>"
-            break
-        end
-    end
-end
 
 Ice.keymap = {}
 Ice.keymap.general = {
@@ -62,9 +15,7 @@ Ice.keymap.general = {
     cmd_word_forward = { "c", "<A-f>", "<S-Right>", { silent = false } },
     cmd_word_backward = { "c", "<A-b>", "<S-Left>", { silent = false } },
 
-    disable_right_mouse = { { "n", "i", "v", "t" }, "<RightMouse>", "<LeftMouse>" },
-
-    join_lines = {
+   join_lines = {
         { "n", "v" },
         "J",
         function()
@@ -106,12 +57,13 @@ Ice.keymap.general = {
         "<Esc>O",
     },
 
-    open_html_file = { "n", "<A-b>", open_html_file },
-    open_terminal = { "n", "<C-t>", terminal_command },
+    open_html_file = { "n", "<A-b>", ext.open_html_file },
+    open_terminal = { "n", "<C-t>", ext.terminal_command },
     normal_mode_in_terminal = { "t", "<Esc>", "<C-\\><C-n>" },
     save_file = { { "n", "i", "v" }, "<C-s>", "<Esc>:w<CR>" },
     shift_line_left = { "v", "<", "<gv" },
     shift_line_right = { "v", ">", ">gv" },
-    undo = { { "n", "i", "v", "t", "c" }, "<C-z>", undo },
+    undo = { { "n", "i", "v", "t", "c" }, "<C-z>", ext.undo },
     visual_line = { "n", "V", "0v$" },
+    floaterm_toggle = { "t", "<Esc>", "<Cmd>FloatermToggle floaterm<CR>"}
 }
