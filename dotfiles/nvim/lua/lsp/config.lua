@@ -10,6 +10,10 @@ lsp = {
     ["bash-language-server"] = {
         formatter = "shfmt",
     },
+    sqls = {
+        formatter = "sleek",
+        enabled = true,
+    },
     clangd = {},
     ["css-lsp"] = {
         formatter = "prettier",

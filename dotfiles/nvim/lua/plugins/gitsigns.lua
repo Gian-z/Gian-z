@@ -13,5 +13,6 @@ return {
         { "<leader>gB", "<Cmd>Gitsigns stage_buffer<CR>", desc = "stage buffer", silent = true, noremap = true },
         { "<leader>gb", "<Cmd>Gitsigns blame<CR>", desc = "git blame", silent = true, noremap = true },
         { "<leader>gl", "<Cmd>Gitsigns blame_line<CR>", desc = "git blame line", silent = true, noremap = true },
+        { "<leader>gt", "<Cmd>Gitsigns toggle_current_line_blame<CR>", desc = "git toggle blame line", silent = true, noremap = true },
     },
 }

@@ -43,4 +43,6 @@ Ice.keymap.general = {
     window_down = { { "n", "i", "v", "t", "c" }, "<C-j>", "<Cmd>wincmd j<CR>" },
     window_new = { { "n", "i", "v", "t", "c" }, "<Leader>wn", "<Cmd>new<CR>" },
     window_new_v = { { "n", "i", "v", "t", "c" }, "<Leader>wvn", "<Cmd>vnew<CR>" },
+
+    cmi_metatool_build = {"n", "<Leader>mb", ext.build_metatool()},
 }

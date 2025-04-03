@@ -1,7 +1,9 @@
 -- Configuration for each individual plugin
 ---@diagnostic disable: need-check-nil
 local config = {}
+---@diagnostic disable-next-line: unused-local
 local config_root = string.gsub(vim.fn.stdpath "config" --[[@as string]], "\\", "/")
+---@diagnostic disable-next-line: unused-local
 local priority = {
     LOW = 100,
     MEDIUM = 200,
@@ -37,6 +39,25 @@ config.dashboard = require "plugins.dashboard"
 config.gitsigns = require "plugins.gitsigns"
 config.hop = require "plugins.hop"
 config.floaterm = require "plugins.floaterm"
+config.fidget = require "plugins.fidget"
+config.lualine = require "plugins.lualine"
+config.neoscroll = require "plugins.neoscroll"
+config.telescope = require "plugins.telescope"
+-- config.lazygit = require "plugins.lazygit"
+config.neogit = require "plugins.neogit"
+
+config.nui = { "MunifTanjim/nui.nvim", lazy = true, }
+
+config["nvim-transparent"] = require "plugins.transparent"
+config["nvim-tree"] = require "plugins.tree"
+config["nvim-treesitter"] = require "plugins.treesitter"
+config["todo-comments"] = require "plugins.todo"
+config["which-key"] = require "plugins.whichkey"
+config["markdown-preview"] = require "plugins.md-preview"
+config["indent-blankline"] = require "plugins.blankline"
+
+config["tokyonight"] = { "folke/tokyonight.nvim", lazy = true, }
+config["cheatsheet"] = { "sudormrfbin/cheatsheet.nvim" }
 
 config["grug-far"] = {
     "MagicDuck/grug-far.nvim",
@@ -48,16 +69,6 @@ config["grug-far"] = {
     keys = {
         { "<leader>ug", "<Cmd>GrugFar<CR>", desc = "find and replace", silent = true, noremap = true },
     },
-}
-
-config["indent-blankline"] = require "plugins.blankline"
-config.lualine = require "plugins.lualine"
-config["markdown-preview"] = require "plugins.md-preview"
-config.neoscroll = require "plugins.neoscroll"
-
-config.nui = {
-    "MunifTanjim/nui.nvim",
-    lazy = true,
 }
 
 config["nvim-autopairs"] = {
@@ -81,15 +92,6 @@ config["nvim-notify"] = {
     end,
 }
 
-config["nvim-transparent"] = require "plugins.transparent"
-config["nvim-tree"] = require "plugins.tree"
-config["nvim-treesitter"] = require "plugins.treesitter"
-config.telescope = require "plugins.telescope"
-config["todo-comments"] = require "plugins.todo"
-config.undotree = require "plugins.undotree"
-config["which-key"] = require "plugins.whichkey"
-config.lazygit = require "plugins.lazygit"
-
 config.surround = {
     "kylechui/nvim-surround",
     version = "*",
@@ -97,14 +99,6 @@ config.surround = {
     event = "User IceLoad",
 }
 
-config["tokyonight"] = {
-    "folke/tokyonight.nvim",
-    lazy = true,
-}
-
-config["cheatsheet"] = {
-    "sudormrfbin/cheatsheet.nvim"
-}
 
 Ice.plugins = config
 Ice.keymap.prefix = {

@@ -26,6 +26,7 @@ return {
             "tsx",
             "vim",
             "vimdoc",
+            "sql"
         },
         highlight = {
             enable = true,

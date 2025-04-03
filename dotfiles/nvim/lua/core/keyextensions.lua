@@ -62,17 +62,30 @@ ret.get_hoverdoc = function()
     vim.cmd "Lspsaga hover_doc"
 end
 
-ret.get_terminalcmd = function()
+local function get_terminalcmd()
     if not require("core.utils").is_windows() then
-        return "<Cmd>split | terminal<CR>" -- let $SHELL decide the default shell
+        return "split | terminal" -- let $SHELL decide the default shell
     else
         local executables = { "pwsh", "powershell", "bash", "cmd" }
         for _, executable in require("core.utils").ordered_pair(executables) do
             if vim.fn.executable(executable) == 1 then
-                return "<Cmd>split term://" .. executable .. "<CR>"
+                return "split term://" .. executable
             end
         end
     end
+end
+
+local terminal = get_terminalcmd()
+
+ret.get_terminalcmd = function()
+    return "<Cmd>" .. terminal .. "<CR>"
+end
+
+ret.build_metatool = function()
+    return "<Cmd>"
+        .. terminal
+        .. " c:/CMI-GitHub/SDK/VsBuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe /m c:/CMI-GitHub/cmi-metatool/src/MetaTool.sln /t:Build"
+        .. "<CR>"
 end
 
 -- Determine in advance what shell to use for the <C-t> keymap
