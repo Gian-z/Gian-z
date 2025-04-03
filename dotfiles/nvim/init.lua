@@ -1,21 +1,11 @@
 Ice = {}
 
 local v0_9 = require "v0_9"
+
 require "core.init"
 require "plugins.init"
 
 v0_9.after()
-
--- Load user configuration files
-local config_root = string.gsub(vim.fn.stdpath "config", "\\", "/")
-if not vim.api.nvim_get_runtime_file("lua/custom/", false)[1] then
-    os.execute('mkdir "' .. config_root .. '/lua/custom"')
-end
-
-local custom_path = config_root .. "/lua/custom/"
-if require("core.utils").file_exists(custom_path .. "init.lua") then
-    require "custom.init"
-end
 
 -- Define keymap
 local keymap = Ice.keymap.general
@@ -51,9 +41,4 @@ if not require("core.utils").noplugin then
     end
 
     require("plugins.utils").colorscheme(Ice.colorscheme)
-end
-
--- Prepend this to runtimepath last as it would be overridden by lazy otherwise
-if vim.uv.fs_scandir(custom_path) then
-    vim.opt.rtp:prepend(custom_path)
 end

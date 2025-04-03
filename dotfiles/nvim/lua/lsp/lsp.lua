@@ -82,8 +82,8 @@ Ice.plugins.mason = {
 
         local registry = require "mason-registry"
         local function install(package)
-            local s, p = pcall(registry.get_package, package)
-            if s and not p:is_installed() then
+            local p = require("mason-registry").get_package(package)
+            if not p:is_installed() then
                 p:install()
             end
         end

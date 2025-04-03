@@ -3,7 +3,10 @@ local lsp = {}
 -- For instructions on configuration, see official wiki:
 -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md
 lsp = {
-    ["asm-lsp"] = {},
+    ["asm-lsp"] = {
+        formatter = "asmfmt",
+        enabled = true,
+    },
     ["bash-language-server"] = {
         formatter = "shfmt",
     },
@@ -58,6 +61,7 @@ lsp = {
     },
     ["json-lsp"] = {
         formatter = "prettier",
+        enabled = true
     },
     ["lua-language-server"] = {
         formatter = "stylua",
@@ -102,6 +106,7 @@ lsp = {
                 client.server_capabilities.semanticTokensProvider = nil
             end,
         },
+        enabled = true,
     },
     pyright = {
         formatter = "black",

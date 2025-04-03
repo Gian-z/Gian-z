@@ -5,7 +5,7 @@ return {
         "LinArcX/telescope-env.nvim",
         {
             "nvim-telescope/telescope-fzf-native.nvim",
-            build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && "
+            build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5 && "
                 .. "cmake --build build --config Release && "
                 .. "cmake --install build --prefix build",
         },
@@ -43,13 +43,13 @@ return {
     },
     config = function(_, opts)
         local telescope = require "telescope"
-        telescope.setup(opinits)
+        telescope.setup(opts)
         telescope.load_extension "fzf"
         telescope.load_extension "env"
     end,
     keys = {
-        { "<leader>tf", "<Cmd>Telescope find_files<CR>", desc = "find file", silent = true, noremap = true },
-        { "<leader>tg", "<Cmd>Telescope live_grep<CR>", desc = "live grep", silent = true, noremap = true },
-        { "<leader>te", "<Cmd>Telescope env<CR>", desc = "environment variables", silent = true, noremap = true },
+        { "<Leader><Leader>", "<Cmd>Telescope find_files<CR>", desc = "find file", silent = true, noremap = true },
+        { "<Leader>t", "<Cmd>Telescope live_grep<CR>", desc = "live grep", silent = true, noremap = true },
+        { "<Leader>e", "<Cmd>Telescope env<CR>", desc = "environment variables", silent = true, noremap = true },
     },
 }
