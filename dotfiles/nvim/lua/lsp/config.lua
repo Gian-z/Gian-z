@@ -61,7 +61,7 @@ lsp = {
     },
     ["json-lsp"] = {
         formatter = "prettier",
-        enabled = true
+        enabled = true,
     },
     ["lua-language-server"] = {
         formatter = "stylua",
@@ -102,9 +102,6 @@ lsp = {
                 "dotnet",
                 vim.fn.stdpath "data" .. "/mason/packages/omnisharp/libexec/Omnisharp.dll",
             },
-            on_attach = function(client)
-                client.server_capabilities.semanticTokensProvider = nil
-            end,
         },
         enabled = true,
     },
