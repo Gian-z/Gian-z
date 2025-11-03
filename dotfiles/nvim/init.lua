@@ -3,7 +3,6 @@ Ice = {}
 local v0_9 = require "v0_9"
 
 require "core.init"
-require "plugins.init"
 
 v0_9.after()
 
@@ -40,5 +39,5 @@ if not require("core.utils").noplugin then
         end
     end
 
-    require("plugins.utils").colorscheme(Ice.colorscheme)
+    require("core.utils").colorscheme(Ice.colorscheme)
 end

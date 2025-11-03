@@ -66,12 +66,7 @@ local function get_terminalcmd()
     if not require("core.utils").is_windows() then
         return "split | terminal" -- let $SHELL decide the default shell
     else
-        local executables = { "pwsh", "powershell", "bash", "cmd" }
-        for _, executable in require("core.utils").ordered_pair(executables) do
-            if vim.fn.executable(executable) == 1 then
-                return "split term://" .. executable
-            end
-        end
+        return "split term://powershell"
     end
 end
 
@@ -84,9 +79,8 @@ end
 ret.build_metatool = function()
     return "<Cmd>"
         .. terminal
-        .. " c:/CMI-GitHub/SDK/VsBuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe /m c:/CMI-GitHub/cmi-metatool/src/MetaTool.sln /t:Build"
+        .. " c:/CMI-GitHub/SDK/VsBuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe /m c:/CMI-GitHub/cmi-metatool/Server/src/MetaTool.sln /t:Build"
         .. "<CR>"
 end
 
--- Determine in advance what shell to use for the <C-t> keymap
 return ret

@@ -4,7 +4,7 @@ local opt = vim.opt
 -- This MUST NOT be en_US, but en_US.UTF-8
 -- I originally set it to en_US without UTF-8 and `yGp` ceased to work
 -- It just threw an 'E353: Nothing in register "' error at me
-vim.cmd "language en_US.UTF-8"
+-- vim.cmd "language en_US.UTF-8"
 
 vim.cmd "syntax off"
 g.encoding = "UTF-8"

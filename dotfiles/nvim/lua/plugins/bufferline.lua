@@ -8,10 +8,10 @@ return {
         options = {
             close_command = ":BufferLineClose %d",
             right_mouse_command = ":BufferLineClose %d",
-            separator_style = "thin",
+            separator_style = "slant",
+            slant = true,
             offsets = {
                 {
-                    filetype = "NvimTree",
                     text = "File Explorer",
                     highlight = "Directory",
                     text_align = "left",
