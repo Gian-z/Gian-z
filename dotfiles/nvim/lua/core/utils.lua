@@ -41,6 +41,33 @@ utils.ft = function(filetype, config)
     })
 end
 
+-- Format Code
+utils.format = function()
+    local lsp_is_active = require("core.utils").lsp_is_active
+
+    -- do not format if no lsp is attached to the buffer
+    if not lsp_is_active() then
+        vim.notify("Cannot format as no lsp is attached!", vim.log.levels.WARN)
+        return
+    end
+
+    if lsp_is_active "denols" then
+        vim.cmd "w"
+        vim.cmd "!deno fmt %"
+        vim.cmd ""
+        return
+    end
+
+    if lsp_is_active "rust_analyzer" then
+        vim.cmd "w"
+        vim.cmd "!cargo fmt"
+        vim.cmd ""
+        return
+    end
+
+    vim.lsp.buf.format { async = true }
+end
+
 -- Get the parent directory of target. If target is nil, the parent directory of the current file will be looked for,
 -- suffixed with a "/" (which is because this function is intended to be used together with fs_scandir, where errors
 -- would occur sometimes should a path without an ending "/" be passed to it, such as "C:" instead of "C:/").
@@ -75,6 +102,52 @@ utils.get_parent = function(target)
     return string.sub(target, 1, string.findlast(target, "/"))
 end
 
+utils.get_root = function()
+    local uv = vim.uv
+    local default_pattern = {
+        ".git",
+        "package.json",
+        ".prettierrc",
+        "tsconfig.json",
+        "pubspec.yaml",
+        ".gitignore",
+        "stylua.toml",
+        "README.md",
+    }
+
+    local pattern = Ice.chdir_root_pattern
+    if pattern == nil or type(pattern) ~= "table" then
+        pattern = default_pattern
+    end
+
+    local parent = utils.get_parent()
+    local root = parent
+    local has_found_root = false
+
+    while not (has_found_root or parent == nil) do
+        local dir = uv.fs_scandir(parent)
+
+        if dir == nil then
+            break
+        end
+
+        local file = ""
+
+        while file ~= nil do
+            file = uv.fs_scandir_next(dir)
+            if table.find(pattern, file) then
+                root = parent
+                has_found_root = true
+                break
+            end
+        end
+
+        parent = utils.get_parent(parent)
+    end
+
+    return root
+end
+
 utils.is_windows = function()
     return vim.uv.os_uname().sysname == "Windows_NT"
 end
@@ -87,7 +160,7 @@ utils.is_wsl = function()
     return string.find(vim.uv.os_uname().release, "WSL") ~= nil
 end
 
-utils.is_mac = function ()
+utils.is_mac = function()
     return vim.uv.os_uname().sysname == "Darwin"
 end
 

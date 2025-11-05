@@ -8,5 +8,6 @@ return {
     },
     keys = {
         { "-", "<cmd>Oil<cr>" },
+        { "_", "<cmd>Oil .<cr>"}
     },
 }

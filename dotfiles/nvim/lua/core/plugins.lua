@@ -32,82 +32,56 @@ vim.api.nvim_create_autocmd("User", {
     end,
 })
 
+-- Core
+config.lspsaga = require "plugins.lspsaga"
+config.mason = require "plugins.mason"
+
+-- UI
 config.bufferline = require "plugins.bufferline"
 config.colorizer = require "plugins.colorizer"
-config.comment = require "plugins.comment"
 config.dashboard = require "plugins.dashboard"
-config.gitsigns = require "plugins.gitsigns"
-config.hop = require "plugins.hop"
-config.floaterm = require "plugins.floaterm"
 config.fidget = require "plugins.fidget"
 config.lualine = require "plugins.lualine"
-config.neoscroll = require "plugins.neoscroll"
-config.telescope = require "plugins.telescope"
-config.lazygit = require "plugins.lazygit"
-config.neogit = require "plugins.neogit"
-config.mason = require "plugins.mason"
-config.lspsaga = require "plugins.lspsaga"
 config.trouble = require "plugins.trouble"
-config.oil = require "plugins.oil"
-
+config["nvim-treesitter"] = require "plugins.treesitter"
+config["indent-blankline"] = require "plugins.blankline"
+config["nvim-notify"] = require "plugins.nvim-notify"
+config["nvim-scrollview"] = require "plugins.scrollview"
 config.nui = { "MunifTanjim/nui.nvim", lazy = true }
 
--- config["nvim-transparent"] = require "plugins.transparent"
--- config["nvim-tree"] = require "plugins.tree"
-config["nvim-treesitter"] = require "plugins.treesitter"
+-- Navigation
+config.hop = require "plugins.hop"
+config.oil = require "plugins.oil"
+config.harpoon = require "plugins.harpoon"
+config.neoscroll = require "plugins.neoscroll"
+config.telescope = require "plugins.telescope"
 config["todo-comments"] = require "plugins.todo"
 config["which-key"] = require "plugins.whichkey"
-config["markdown-preview"] = require "plugins.md-preview"
-config["indent-blankline"] = require "plugins.blankline"
-config["typst-preview"] = require "plugins.typst-preview"
-config["flutter-tools"] = require "plugins.flutter-tools"
-config["rust-tools"] = require "plugins.rust-tools"
-config["nvim-cmp"] = require "plugins.nvim-cmp"
-config["null-ls"] = require "plugins.null-ls"
-
-config["tokyonight"] = { "folke/tokyonight.nvim", lazy = true }
 config["cheatsheet"] = { "sudormrfbin/cheatsheet.nvim" }
 
+-- Modification
+config.comment = require "plugins.comment"
+config.surround = require "plugins.nvim-surround"
+config["grug-far"] = require "plugins.grug-far"
+config["nvim-autopairs"] = require "plugins.nvim-autopairs"
+config["nvim-cmp"] = require "plugins.nvim-cmp"
 
-config["grug-far"] = {
-    "MagicDuck/grug-far.nvim",
-    opts = {
-        disableBufferLineNumbers = true,
-        startInInsertMode = true,
-        windowCreationCommand = "tabnew %",
-    },
-    keys = {
-        { "<leader>ug", "<Cmd>GrugFar<CR>", desc = "find and replace", silent = true, noremap = true },
-    },
-}
+config.gitsigns = require "plugins.gitsigns"
+config.neogit = require "plugins.neogit"
 
-config["nvim-autopairs"] = {
-    "windwp/nvim-autopairs",
-    event = "InsertEnter",
-    main = "nvim-autopairs",
-    opts = {},
-}
+config["typst-preview"] = require "plugins.typst-preview"
+config["markdown-preview"] = require "plugins.md-preview"
+config["flutter-tools"] = require "plugins.flutter-tools"
+config["rust-tools"] = require "plugins.rust-tools"
+config["null-ls"] = require "plugins.null-ls"
 
-config["nvim-notify"] = {
-    "rcarriga/nvim-notify",
-    event = "VeryLazy",
-    opts = {
-        timeout = 3000,
-        background_colour = "#000000",
-        stages = "static",
-    },
-    config = function(_, opts)
-        require("notify").setup(opts)
-        vim.notify = require "notify"
-    end,
-}
-
-config.surround = {
-    "kylechui/nvim-surround",
-    version = "*",
-    opts = {},
-    event = "User IceLoad",
-}
+-- Colorschemes
+config["cyberdream"] = { "scottmckendry/cyberdream.nvim", lazy = true }
+config["gruvbox"] = { "ellisonleao/gruvbox.nvim", lazy = true }
+config["kanagawa"] = { "rebelot/kanagawa.nvim", lazy = true }
+config["miasma"] = { "xero/miasma.nvim", lazy = true }
+config["monet"] = { "fynnfluegge/monet.nvim", lazy = true }
+config["nightfox"] = { "EdenEast/nightfox.nvim", lazy = true }
+config["tokyonight"] = { "folke/tokyonight.nvim", lazy = true }
 
 Ice.plugins = config
-

@@ -22,31 +22,7 @@ return {
     keys = {
         {
             "<leader>lf",
-            function()
-                local lsp_is_active = require("core.utils").lsp_is_active
-
-                -- do not format if no lsp is attached to the buffer
-                if not lsp_is_active() then
-                    vim.notify("Cannot format as no lsp is attached!", vim.log.levels.WARN)
-                    return
-                end
-
-                if lsp_is_active "denols" then
-                    vim.cmd "w"
-                    vim.cmd "!deno fmt %"
-                    vim.cmd ""
-                    return
-                end
-
-                if lsp_is_active "rust_analyzer" then
-                    vim.cmd "w"
-                    vim.cmd "!cargo fmt"
-                    vim.cmd ""
-                    return
-                end
-
-                vim.lsp.buf.format { async = true }
-            end,
+            require("core.utils").format,
             desc = "format code",
         },
     },

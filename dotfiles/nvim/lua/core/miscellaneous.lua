@@ -78,6 +78,41 @@ elseif utils.is_linux() then
     ]]
 end
 
+-- Autoformat on save
+vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = "*",
+    callback = require("core.utils").format,
+})
+
+-- Automatic switch to root directory
+vim.api.nvim_create_autocmd("BufEnter", {
+    group = vim.api.nvim_create_augroup("AutoChdir", { clear = true }),
+    callback = function()
+        if not (Ice.auto_chdir or Ice.auto_chdir == nil) then
+            return
+        end
+
+        local default_exclude_filetype = { "oil", "help" }
+        local default_exclude_buftype = { "terminal", "nofile" }
+
+        local exclude_filetype = Ice.chdir_exclude_filetype
+        if exclude_filetype == nil or type(exclude_filetype) ~= "table" then
+            exclude_filetype = default_exclude_filetype
+        end
+
+        local exclude_buftype = Ice.chdir_exclude_buftype
+        if exclude_buftype == nil or type(exclude_buftype) ~= "table" then
+            exclude_buftype = default_exclude_buftype
+        end
+
+        if table.find(exclude_filetype, vim.bo.filetype) or table.find(exclude_buftype, vim.bo.buftype) then
+            return
+        end
+
+        vim.api.nvim_set_current_dir(require("core.utils").get_root())
+    end,
+})
+
 -- Clears redundant shada.tmp.X files (for windows only)
 if utils.is_windows() then
     local remove_shada_tmp_group = vim.api.nvim_create_augroup("RemoveShadaTmp", { clear = true })
