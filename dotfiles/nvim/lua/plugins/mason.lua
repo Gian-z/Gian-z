@@ -7,6 +7,10 @@ return {
     event = "User IceLoad",
     cmd = "Mason",
     opts = {
+        registries = {
+            "github:mason-org/mason-registry",
+            "github:Crashdummyy/mason-registry",
+        },
         ui = {
             icons = {
                 package_installed = Ice.symbols.Affirmative,
@@ -20,7 +24,7 @@ return {
 
         local registry = require "mason-registry"
         local function install(package)
-            local p = require("mason-registry").get_package(package)
+            local p = registry.get_package(package)
             if not p:is_installed() then
                 p:install()
             end
@@ -29,85 +33,47 @@ return {
         local mason_lspconfig_mapping = require("mason-lspconfig").get_mappings().package_to_lspconfig
         local installed_packages = registry.get_installed_package_names()
 
+        local ok_blink, blink = pcall(require, "blink.cmp")
+        local capabilities = ok_blink and blink.get_lsp_capabilities() or vim.lsp.protocol.make_client_capabilities()
+
         for lsp, config in pairs(Ice.lsp) do
-            install(lsp)
+            if config.active then
+                install(lsp)
 
-            local formatter = config.formatter
-            if not formatter == nil then
-                install(formatter)
-            end
-
-            if not vim.tbl_contains(installed_packages, lsp) then
-                goto continue
-            end
-
-            lsp = mason_lspconfig_mapping[lsp]
-            if not config.managed_by_plugin then
-                local setup = config.setup
-                if type(setup) == "function" then
-                    setup = setup()
-                elseif setup == nil then
-                    setup = {}
-                end
-
-                local user_on_attach = function() end
-                if type(setup.on_attach) == "function" then
-                    user_on_attach = setup.on_attach
-                end
-
-                local on_attach = function(client, bufnr)
-                    -- Only stop using lsp as format source if a formatter is set
-                    if config.formatter ~= nil then
-                        client.server_capabilities.documentFormattingProvider = false
-                        client.server_capabilities.documentRangeFormattingProvider = false
+                -- Plugin-managed servers (roslyn, rust) start their own client,
+                -- so skip them here. Also skip on the very first run, before the
+                -- mason package has finished installing — it's picked up next
+                -- session. Per-server settings live in the native
+                -- `lsp/<name>.lua` files, which vim.lsp.config() merges in.
+                if not config.managed_by_plugin and vim.tbl_contains(installed_packages, lsp) then
+                    local formatter = config.formatter
+                    local on_attach = function(client, bufnr)
+                        -- Defer formatting to conform when a formatter is set, so
+                        -- the LSP isn't also offered as a formatting source.
+                        if formatter ~= nil then
+                            client.server_capabilities.documentFormattingProvider = false
+                            client.server_capabilities.documentRangeFormattingProvider = false
+                        end
+                        require("core.utils").lsp_attach_keymap(bufnr)
                     end
 
-                    require("core.utils").lsp_attach_keymap(bufnr)
-                    user_on_attach(client, bufnr)
+                    local server = mason_lspconfig_mapping[lsp]
+                    vim.lsp.config(server, {
+                        capabilities = capabilities,
+                        on_attach = on_attach,
+                    })
+                    vim.lsp.enable(server)
                 end
-
-                vim.lsp.config(lsp, {
-                    capabilities = require("cmp_nvim_lsp").default_capabilities(),
-                    on_attach = on_attach,
-                })
-                vim.lsp.enable(lsp)
             end
-            ::continue::
         end
 
-        -- UI
-        vim.diagnostic.config {
-            virtual_text = true,
-            underline = true,
-            update_in_insert = true,
-            severity_sort = true,
-            signs = {
-                active = true,
-                text = {
-                    [vim.diagnostic.severity.ERROR] = Ice.symbols.Error,
-                    [vim.diagnostic.severity.WARN] = Ice.symbols.Warn,
-                    [vim.diagnostic.severity.HINT] = Ice.symbols.Hint,
-                    [vim.diagnostic.severity.INFO] = Ice.symbols.Info,
-                },
-                numhl = {},
-                linehl = {},
-            },
-            float = {
-                border = "rounded",
-                source = "always",
-            },
-        }
-
-        vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-            vim.lsp.handlers.hover,
-            { border = "rounded" }
-        )
-
-        vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
-            vim.lsp.handlers.signature_help,
-            { border = "rounded" }
-        )
-
-        vim.api.nvim_command "LspStart"
+        -- vim.lsp.enable() only attaches on the next FileType event. For buffers
+        -- already loaded when mason's config runs (the one that triggered
+        -- `User IceLoad`), re-fire FileType so the just-enabled servers attach.
+        for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+            if vim.api.nvim_buf_is_loaded(bufnr) and vim.bo[bufnr].filetype ~= "" then
+                vim.api.nvim_exec_autocmds("FileType", { buffer = bufnr })
+            end
+        end
     end,
 }

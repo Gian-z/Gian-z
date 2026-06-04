@@ -2,29 +2,7 @@ local utils = require "core.utils"
 
 local config_path = string.gsub(vim.fn.stdpath "config", "\\", "/")
 
--- Yanking on windows / wsl
-local clip_path = config_path .. "/bin/uclip.exe"
-if not require("core.utils").file_exists(clip_path) then
-    local root
-    if utils.is_windows() then
-        root = "C:"
-    else
-        root = "/mnt/c"
-    end
-    clip_path = root .. "/Windows/System32/clip.exe"
-end
-
-if utils.is_windows() or utils.is_wsl() then
-    vim.api.nvim_create_autocmd("TextYankPost", {
-        callback = function()
-            if vim.v.event.operator == "y" then
-                vim.fn.system(clip_path, vim.fn.getreg "0")
-            end
-        end,
-    })
-else
-    vim.cmd "set clipboard+=unnamedplus"
-end
+vim.opt.clipboard:append "unnamedplus"
 
 -- IME switching on windows / wsl
 if utils.is_windows() or utils.is_wsl() then
@@ -77,12 +55,6 @@ elseif utils.is_linux() then
         autocmd InsertEnter * :silent if fcitx5state == 2 | call system("fcitx5-remote -o") | endif
     ]]
 end
-
--- Autoformat on save
-vim.api.nvim_create_autocmd("BufWritePre", {
-    pattern = "*",
-    callback = require("core.utils").format,
-})
 
 -- Automatic switch to root directory
 vim.api.nvim_create_autocmd("BufEnter", {

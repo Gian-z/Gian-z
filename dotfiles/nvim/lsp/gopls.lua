@@ -1,5 +1,4 @@
 return {
-    formatter = "gofumpt",
     settings = {
         gopls = {
             analyses = {

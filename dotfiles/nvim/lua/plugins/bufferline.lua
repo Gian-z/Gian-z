@@ -12,6 +12,7 @@ return {
             slant = true,
             offsets = {
                 {
+                    filetype = "neo-tree",
                     text = "File Explorer",
                     highlight = "Directory",
                     text_align = "left",
@@ -21,7 +22,8 @@ return {
             diagnostics_indicator = function(_, _, diagnostics_dict, _)
                 local s = " "
                 for e, n in pairs(diagnostics_dict) do
-                    local sym = e == "error" and Ice.symbols.Error or (e == "warning" and Ice.symbols.Warn or Ice.symbols.Info)
+                    local sym = e == "error" and Ice.symbols.Error
+                        or (e == "warning" and Ice.symbols.Warn or Ice.symbols.Info)
                     s = s .. n .. sym
                 end
                 return s

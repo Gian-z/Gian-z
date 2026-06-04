@@ -1,14 +1,6 @@
 -- Configuration for each individual plugin
 ---@diagnostic disable: need-check-nil
 local config = {}
----@diagnostic disable-next-line: unused-local
-local config_root = string.gsub(vim.fn.stdpath "config" --[[@as string]], "\\", "/")
----@diagnostic disable-next-line: unused-local
-local priority = {
-    LOW = 100,
-    MEDIUM = 200,
-    HIGH = 615,
-}
 
 -- Add IceLoad event
 -- If user starts neovim but does not edit a file, i.e., entering Dashboard directly, the IceLoad event is hooked to the
@@ -42,41 +34,61 @@ config.colorizer = require "plugins.colorizer"
 config.dashboard = require "plugins.dashboard"
 config.fidget = require "plugins.fidget"
 config.lualine = require "plugins.lualine"
+config["nvim-notify"] = require "plugins.nvim-notify"
 config.trouble = require "plugins.trouble"
 config["nvim-treesitter"] = require "plugins.treesitter"
 config["indent-blankline"] = require "plugins.blankline"
-config["nvim-notify"] = require "plugins.nvim-notify"
 config["nvim-scrollview"] = require "plugins.scrollview"
 config.nui = { "MunifTanjim/nui.nvim", lazy = true }
 
 -- Navigation
-config.hop = require "plugins.hop"
+config.flash = require "plugins.flash"
 config.oil = require "plugins.oil"
+config["neo-tree"] = require "plugins.neotree"
 config.harpoon = require "plugins.harpoon"
 config.neoscroll = require "plugins.neoscroll"
 config.telescope = require "plugins.telescope"
 config["todo-comments"] = require "plugins.todo"
 config["which-key"] = require "plugins.whichkey"
 config["cheatsheet"] = { "sudormrfbin/cheatsheet.nvim" }
+config.persistence = require "plugins.persistence"
 
 -- Modification
 config.comment = require "plugins.comment"
 config.surround = require "plugins.nvim-surround"
 config["grug-far"] = require "plugins.grug-far"
+config.yanky = require "plugins.yanky"
 config["nvim-autopairs"] = require "plugins.nvim-autopairs"
-config["nvim-cmp"] = require "plugins.nvim-cmp"
+config["blink-cmp"] = require "plugins.blink"
+config.mini = require "plugins.mini"
+config.schemastore = require "plugins.schemastore"
 
 config.gitsigns = require "plugins.gitsigns"
 config.neogit = require "plugins.neogit"
 
 config["typst-preview"] = require "plugins.typst-preview"
 config["markdown-preview"] = require "plugins.md-preview"
+config["render-markdown"] = require "plugins.render-markdown"
 config["flutter-tools"] = require "plugins.flutter-tools"
 config["rust-tools"] = require "plugins.rust-tools"
-config["null-ls"] = require "plugins.null-ls"
+config.conform = require "plugins.conform"
+config["nvim-lint"] = require "plugins.nvim-lint"
+
+-- AI / Debugging / Testing
+config.claudecode = require "plugins.claudecode"
+config.dap = require "plugins.dap"
+config.neotest = require "plugins.neotest"
+
+-- Editing extras
+config["ts-context"] = require "plugins.ts-context"
+config.diffview = require "plugins.diffview"
+config.aerial = require "plugins.aerial"
+config["roslyn"] = require "plugins.roslyn"
 
 -- Colorschemes
+config["ayu"] = { "ayu-theme/ayu-vim", lazy = true }
 config["cyberdream"] = { "scottmckendry/cyberdream.nvim", lazy = true }
+config["github-theme"] = { "projekt0n/github-nvim-theme", lazy = true }
 config["gruvbox"] = { "ellisonleao/gruvbox.nvim", lazy = true }
 config["kanagawa"] = { "rebelot/kanagawa.nvim", lazy = true }
 config["miasma"] = { "xero/miasma.nvim", lazy = true }

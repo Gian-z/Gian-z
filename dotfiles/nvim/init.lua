@@ -1,10 +1,38 @@
-Ice = {}
+if vim.loader then
+    vim.loader.enable()
+end
 
-local v0_9 = require "v0_9"
+-- Guarded Ice registry: warns on unknown top-level keys (typo detection).
+do
+    local known = {
+        plugins = true,
+        lsp = true,
+        keymap = true,
+        ft = true,
+        lazy = true,
+        symbols = true,
+        colorschemes = true,
+        colorscheme = true,
+        auto_chdir = true,
+        chdir_exclude_filetype = true,
+        chdir_exclude_buftype = true,
+        chdir_root_pattern = true,
+    }
+    local backing = {}
+    Ice = setmetatable({}, {
+        __index = backing,
+        __newindex = function(_, k, v)
+            if not known[k] and not tostring(k):match "^__" then
+                vim.schedule(function()
+                    vim.notify("Ice: unknown key '" .. tostring(k) .. "' (typo?)", vim.log.levels.WARN)
+                end)
+            end
+            backing[k] = v
+        end,
+    })
+end
 
 require "core.init"
-
-v0_9.after()
 
 -- Define keymap
 local keymap = Ice.keymap.general

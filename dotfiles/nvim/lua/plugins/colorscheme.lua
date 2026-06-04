@@ -67,17 +67,17 @@ Ice.colorschemes = {
     },
     ["kanagawa-wave"] = {
         name = "kanagawa",
-        theme = "wave",
+        setup = { theme = "wave" },
         background = "dark",
     },
     ["kanagawa-dragon"] = {
         name = "kanagawa",
-        theme = "dragon",
+        setup = { theme = "dragon" },
         background = "dark",
     },
     ["kanagawa-lotus"] = {
         name = "kanagawa",
-        theme = "lotus",
+        setup = { theme = "lotus" },
         background = "light",
     },
     nightfox = {
@@ -117,6 +117,18 @@ Ice.colorschemes = {
                 keywords = { italic = false },
             },
         },
+        background = "dark",
+    },
+    cyberdream = {
+        name = "cyberdream",
+        background = "dark",
+    },
+    miasma = {
+        name = "miasma",
+        background = "dark",
+    },
+    monet = {
+        name = "monet",
         background = "dark",
     },
 }

@@ -9,7 +9,7 @@ return {
     opts = {
         ui = {
             border = "rounded",
-            notification_style = "nvim-notify",
+            notification_style = "native",
         },
         decorations = {
             statusline = {

@@ -1,0 +1,55 @@
+name: check
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  stylua:
+    name: stylua format check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: JohnnyMorganz/stylua-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          version: latest
+          args: --check .
+
+  smoke-test:
+    name: config loads
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      # Build tools for plugins that compile on install: treesitter parsers
+      # (cc), telescope-fzf-native (cmake), plus the runtime tools the config
+      # shells out to.
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake ripgrep fd-find nodejs npm
+
+      - name: Install Neovim (stable)
+        uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: stable
+
+      - name: Link the repo as the Neovim config
+        run: |
+          mkdir -p "$HOME/.config"
+          ln -s "$GITHUB_WORKSPACE" "$HOME/.config/nvim"
+
+      # Synchronous install so plugins (e.g. schemastore, required by the lsp
+      # configs) are present before the smoke test dofiles them. Build failures
+      # for optional plugins don't fail this step.
+      - name: Install plugins
+        run: nvim --headless "+Lazy! sync" +qa
+
+      # tests/check.lua exits non-zero (:cq) if any module / spec / lsp config
+      # fails to load.
+      - name: Smoke test
+        run: nvim --headless "+luafile tests/check.lua" +qa

@@ -21,15 +21,7 @@ return {
                 g = true,
             },
         },
-        spec = {
-            { "<leader>b", group = "+buffer" },
-            { "<leader>c", group = "+comment" },
-            { "<leader>g", group = "+git" },
-            { "<leader>h", group = "+hop" },
-            { "<leader>l", group = "+lsp" },
-            { "<leader>t", group = "+telescope" },
-            { "<leader>u", group = "+utils" },
-        },
+        spec = Ice.keymap.prefix,
         win = {
             border = "none",
             padding = { 1, 0, 1, 0 },

@@ -28,7 +28,6 @@ Ice.lazy = {
                 "osc52",
                 "rplugin",
                 "shada",
-                "spellfile",
                 "tarPlugin",
                 "tohtml",
                 "tutor",

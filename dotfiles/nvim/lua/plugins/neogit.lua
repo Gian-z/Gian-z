@@ -17,8 +17,11 @@ return {
     },
     config = function(_, opts)
         require("neogit").setup(opts)
-        Ice.ft.NeogitCommitMessage = function()
+        -- Place the cursor at the top of the commit message buffer. Registered
+        -- directly as a FileType autocmd: neogit's config runs lazily, after the
+        -- startup loop that turns Ice.ft entries into autocmds has already run.
+        require("core.utils").ft("NeogitCommitMessage", function()
             vim.api.nvim_win_set_cursor(0, { 1, 0 })
-        end
+        end)
     end,
 }

@@ -19,7 +19,7 @@ opt.relativenumber = true
 
 opt.cursorline = false
 
-opt.signcolumn = "yes"
+opt.signcolumn = "yes:1"
 
 opt.colorcolumn = "80"
 
@@ -67,6 +67,10 @@ opt.backup = false
 opt.writebackup = false
 opt.swapfile = false
 
+opt.undofile = true
+opt.undodir = vim.fn.stdpath "state" .. "/undo"
+opt.undolevels = 10000
+
 -- Time to wait for a sequence of key combination
 opt.timeoutlen = 500
 
@@ -75,6 +79,10 @@ opt.splitbelow = true
 opt.splitright = true
 
 opt.termguicolors = true
+
+-- Default border for floating windows (hover, signature-help, etc.); replaces
+-- the deprecated `vim.lsp.with(..., { border = ... })` handler wrapping.
+vim.o.winborder = "rounded"
 
 -- Do not display the character "W" before search count
 opt.shortmess = vim.o.shortmess .. "s"
@@ -120,5 +128,13 @@ vim.api.nvim_create_autocmd("CmdwinEnter", {
         vim.cmd "startinsert"
         vim.wo.number = false
         vim.wo.relativenumber = false
+    end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = { "markdown", "gitcommit", "text" },
+    callback = function()
+        vim.opt_local.spell = true
+        vim.opt_local.spelllang = { "en", "de" }
     end,
 })

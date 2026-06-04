@@ -6,14 +6,14 @@ return {
         config = {
             -- https://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=icenvim
             header = {
-              " ",
-              "              .__         ",
-              "___________  _|__| _____  ",
-              "\\___   /\\  \\/ /  |/     \\ ",
-              " /    /  \\   /|  |  Y Y  \\",
-              "/_____ \\  \\_/ |__|__|_|  /",
-              "      \\/               \\/ ",
-              " ",
+                " ",
+                "              .__         ",
+                "___________  _|__| _____  ",
+                "\\___   /\\  \\/ /  |/     \\ ",
+                " /    /  \\   /|  |  Y Y  \\",
+                "/_____ \\  \\_/ |__|__|_|  /",
+                "      \\/               \\/ ",
+                " ",
             },
             shortcut = {
                 {
@@ -21,24 +21,38 @@ return {
                     icon = " ",
                     desc = "Find Files",
                     action = "Telescope find_files",
-                    key = 'f'
+                    key = "f",
                 },
                 {
                     group = "DiagnosticHint",
                     icon = " ",
                     desc = "Lazy Profile",
                     action = "Lazy profile",
-                    key = 'l'
+                    key = "l",
                 },
                 {
                     group = "DiagnosticHint",
                     icon = " ",
                     desc = "Mason",
                     action = "Mason",
-                    key = 'm'
-                }
+                    key = "m",
+                },
             },
-            footer = { ":3" },
+            footer = function()
+                local ok, stats = pcall(require, "lazy")
+                if ok then
+                    local s = stats.stats()
+                    return {
+                        "",
+                        " "
+                            .. s.count
+                            .. " plugins loaded in "
+                            .. (math.floor(s.startuptime * 100 + 0.5) / 100)
+                            .. "ms",
+                    }
+                end
+                return { "" }
+            end,
         },
     },
     config = function(_, opts)

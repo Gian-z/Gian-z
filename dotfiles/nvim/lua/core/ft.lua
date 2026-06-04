@@ -41,20 +41,4 @@ Ice.ft = {
         vim.bo.softtabstop = 2
         vim.bo.tabstop = 2
     end,
-    -- Convenience method for setting FileType callback
-    -- Extends default callback if already set
-    ---@param self table
-    ---@param ft string
-    ---@param callback function
-    set = function(self, ft, callback)
-        local default_callback = self[ft]
-        if default_callback ~= nil then
-            self[ft] = function ()
-                default_callback()
-                callback()
-            end
-        else
-            self[ft] = callback
-        end
-    end,
 }

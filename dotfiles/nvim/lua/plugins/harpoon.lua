@@ -1,40 +1,56 @@
+-- Harpoon, driven through the mark keys: m1-m4 jump to pinned files, ma adds
+-- the current file, me opens the editable menu. Native marks still work for
+-- every other letter (only m + a / e / 1-4 are taken).
 return {
     "ThePrimeagen/harpoon",
     branch = "harpoon2",
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
-        local harpoon = require "harpoon"
-
-        -- REQUIRED
-        harpoon:setup()
-        -- REQUIRED
-
-        vim.keymap.set("n", "<leader>a", function()
-            harpoon:list():add()
-        end)
-        vim.keymap.set("n", "<leader>hm", function()
-            harpoon.ui:toggle_quick_menu(harpoon:list())
-        end)
-
-        vim.keymap.set("n", "<leader>h1", function()
-            harpoon:list():select(1)
-        end)
-        vim.keymap.set("n", "<leader>h2", function()
-            harpoon:list():select(2)
-        end)
-        vim.keymap.set("n", "<leader>h3", function()
-            harpoon:list():select(3)
-        end)
-        vim.keymap.set("n", "<leader>h4", function()
-            harpoon:list():select(4)
-        end)
-
-        -- Toggle previous & next buffers stored within Harpoon list
-        vim.keymap.set("n", "<leader>hh", function()
-            harpoon:list():prev()
-        end)
-        vim.keymap.set("n", "<leader>hl", function()
-            harpoon:list():next()
-        end)
+        require("harpoon"):setup()
     end,
+    keys = {
+        {
+            "ma",
+            function()
+                require("harpoon"):list():add()
+            end,
+            desc = "harpoon add file",
+        },
+        {
+            "me",
+            function()
+                local harpoon = require "harpoon"
+                harpoon.ui:toggle_quick_menu(harpoon:list())
+            end,
+            desc = "harpoon menu",
+        },
+        {
+            "m1",
+            function()
+                require("harpoon"):list():select(1)
+            end,
+            desc = "harpoon file 1",
+        },
+        {
+            "m2",
+            function()
+                require("harpoon"):list():select(2)
+            end,
+            desc = "harpoon file 2",
+        },
+        {
+            "m3",
+            function()
+                require("harpoon"):list():select(3)
+            end,
+            desc = "harpoon file 3",
+        },
+        {
+            "m4",
+            function()
+                require("harpoon"):list():select(4)
+            end,
+            desc = "harpoon file 4",
+        },
+    },
 }

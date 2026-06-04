@@ -1,0 +1,12 @@
+# Normalize all text files to LF on checkout and commit. This matches
+# .stylua.toml (line_endings = "Unix") and keeps the config consistent across
+# Windows / Linux / macOS.
+* text=auto eol=lf
+
+# Binary files — never normalize.
+*.exe binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
