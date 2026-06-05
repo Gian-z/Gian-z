@@ -37,17 +37,10 @@
 
 ### 📊 GitHub Stats
 
-<!--
-  Dieses Bild wird von der GitHub Action ".github/workflows/metrics.yml"
-  (lowlighter/metrics) generiert und als github-metrics.svg ins Repo committet.
-  Kein externer Dienst zur Laufzeit → kein Rate-Limit, lädt immer.
-  Einmalig nötig: Repo-Secret METRICS_TOKEN (PAT mit scope 'repo') anlegen.
--->
-
 <p align="center">
   <img src="./github-metrics.svg" alt="GitHub metrics" />
 </p>
 
 ---
 
-<p align="center"><sub>⚡ Fun fact: I'll spend two hours automating a five-minute task — and call it a win.</sub></p>
+<p align="center"><sub>⚡ Fun fact: I don't need AI to type my —</sub></p>
