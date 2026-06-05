@@ -1,1 +1,2 @@
-lazy-lock.json
+# lazy-lock.json is intentionally tracked so clones get the exact, validated
+# plugin versions. Run `:Lazy update` then commit the updated lockfile.

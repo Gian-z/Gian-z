@@ -10,7 +10,23 @@ return {
         { "<leader>gs", "<Cmd>Gitsigns stage_hunk<CR>", desc = "stage / unstage hunk", silent = true, noremap = true },
         { "<leader>gr", "<Cmd>Gitsigns reset_hunk<CR>", desc = "reset hunk", silent = true, noremap = true },
         { "<leader>gB", "<Cmd>Gitsigns stage_buffer<CR>", desc = "stage buffer", silent = true, noremap = true },
-        { "<leader>gb", "<Cmd>Gitsigns blame<CR>", desc = "git blame", silent = true, noremap = true },
+        {
+            "<leader>gb",
+            -- Toggle the full-file blame window: close it if it's already open
+            -- (its buffer filetype is "gitsigns-blame"), otherwise open it.
+            function()
+                for _, win in ipairs(vim.api.nvim_list_wins()) do
+                    if vim.bo[vim.api.nvim_win_get_buf(win)].filetype == "gitsigns-blame" then
+                        vim.api.nvim_win_close(win, false)
+                        return
+                    end
+                end
+                vim.cmd "Gitsigns blame"
+            end,
+            desc = "toggle git blame",
+            silent = true,
+            noremap = true,
+        },
         { "<leader>gl", "<Cmd>Gitsigns blame_line<CR>", desc = "git blame line", silent = true, noremap = true },
         {
             "<leader>gt",

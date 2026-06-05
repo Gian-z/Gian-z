@@ -6,6 +6,66 @@ maintained independently. The `Ice` namespace and the `:Ice*` commands are
 inherited from upstream and kept for muscle memory — they no longer track the
 upstream repo.
 
+## Requirements
+
+- **Neovim ≥ 0.11** (hard requirement — the config aborts with a message on
+  older versions). Use the latest stable for best results.
+- **git** — used to bootstrap the plugin manager and update plugins.
+- **A C compiler** (`gcc`/`clang`, or MSVC on Windows) — Treesitter compiles
+  parsers on first launch.
+- **cmake** — builds `telescope-fzf-native` (optional; without it, fuzzy search
+  falls back to a slower built-in sorter).
+- **ripgrep** (`rg`) and **fd** — Telescope live-grep / file finding.
+- **curl** or **wget** — Mason downloads LSP servers, formatters and DAP tools.
+- **node** + **npm** (and **yarn**) — `markdown-preview` and several LSP servers.
+- **python3** + **pip3** — some tooling.
+- **A [Nerd Font](https://www.nerdfonts.com/)** set as your terminal font — for
+  icons to render.
+- Per-language toolchains as needed: `rust-analyzer`/`cargo`, `dotnet`, `go`, …
+
+Quick install of the common tools:
+
+```sh
+# macOS (Homebrew)
+brew install neovim git cmake ripgrep fd node python
+
+# Debian/Ubuntu
+sudo apt install neovim git build-essential cmake ripgrep fd-find curl nodejs npm python3-pip
+
+# Windows (winget)
+winget install Neovim.Neovim Git.Git Kitware.CMake BurntSushi.ripgrep.MSVC sharkdp.fd OpenJS.NodeJS Python.Python.3.12
+# A C compiler on Windows: install "Desktop development with C++" via Visual Studio
+# Build Tools, or `winget install zig.zig` and point Treesitter at it.
+```
+
+## Installation
+
+Clone the repo to Neovim's config directory for your OS:
+
+```sh
+# Linux / macOS
+git clone <repo-url> ~/.config/nvim
+
+# Windows (PowerShell)
+git clone <repo-url> "$env:LOCALAPPDATA\nvim"   # = %LOCALAPPDATA%\nvim
+```
+
+Then launch `nvim`.
+
+## First launch
+
+The first start does a lot of work and is **not** representative of normal use:
+
+1. `lazy.nvim` bootstraps itself, then clones and installs every plugin.
+2. Treesitter compiles its parsers (needs the C compiler).
+3. Mason downloads the LSP servers, formatters and DAP adapters listed in
+   `lua/core/lsps.lua` (needs `curl`/`wget`).
+
+Let it finish (watch `:Lazy` and `:Mason`), then **restart Neovim once** —
+LSP servers installed on the first run only attach on the next session. After
+restarting, run `:IceHealth` and `:checkhealth` to confirm the prerequisites
+above are satisfied; anything missing is reported there.
+
 ## Layout
 
 ```
@@ -96,7 +156,7 @@ The `Ice` global is the central namespace. `Ice.lsp` lists servers + formatters,
 - `<leader>gP` — preview hunk
 - `<leader>gs` / `<leader>gu` / `<leader>gr` — stage / undo / reset hunk
 - `<leader>gB` — stage buffer
-- `<leader>gb` / `<leader>gl` / `<leader>gt` — blame / blame line / toggle blame
+- `<leader>gb` / `<leader>gl` / `<leader>gt` — toggle blame window / blame line / toggle inline blame
 - `<leader>gd` / `<leader>gD` — diffview open / close
 - `<leader>gh` / `<leader>gH` — branch / current-file history (diffview)
 

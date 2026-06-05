@@ -1,3 +1,15 @@
+-- Hard requirement: this config uses 0.11+ APIs (winborder, vim.lsp.config/
+-- enable, the lsp/*.lua autoload convention, treesitter `main`). Fail fast with
+-- an actionable message instead of a cryptic error deep inside some module.
+if vim.fn.has "nvim-0.11" == 0 then
+    local msg = "This Neovim configuration requires Neovim 0.11 or newer.\n"
+        .. "You are running "
+        .. tostring(vim.version())
+        .. ". Please upgrade Neovim, then restart."
+    vim.api.nvim_echo({ { msg, "ErrorMsg" } }, true, {})
+    return
+end
+
 if vim.loader then
     vim.loader.enable()
 end

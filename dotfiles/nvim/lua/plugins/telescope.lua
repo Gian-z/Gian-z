@@ -7,6 +7,12 @@ return {
         "debugloop/telescope-undo.nvim",
         {
             "nvim-telescope/telescope-fzf-native.nvim",
+            -- Needs cmake + a C compiler to build. When cmake is absent we skip
+            -- the plugin entirely so a missing toolchain can't wedge telescope;
+            -- it falls back to the (slower) built-in generic sorter.
+            enabled = function()
+                return vim.fn.executable "cmake" == 1
+            end,
             build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5 && "
                 .. "cmake --build build --config Release && "
                 .. "cmake --install build --prefix build",
@@ -55,7 +61,9 @@ return {
         opts.extensions["ui-select"] = { require("telescope.themes").get_dropdown {} }
         local telescope = require "telescope"
         telescope.setup(opts)
-        telescope.load_extension "fzf"
+        -- fzf is only present when cmake was available to build it (see above);
+        -- pcall so its absence doesn't abort the rest of the extension loading.
+        pcall(telescope.load_extension, "fzf")
         telescope.load_extension "env"
         telescope.load_extension "ui-select"
         telescope.load_extension "undo"

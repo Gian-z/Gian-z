@@ -197,6 +197,21 @@ local cycle_index = 1 -- 1-based position within `snapshot`
 local cycle_timer = nil -- uv timer that ends the session after inactivity
 local CYCLE_TIMEOUT = 1500 -- ms of inactivity before a session ends
 
+-- Floating "switcher" overlay shown while a cycle session is active. It lists
+-- the frozen snapshot newest-first and highlights the buffer we're about to
+-- land on, so repeated <Tab> taps can aim at a specific buffer.
+local overlay_win = nil -- window handle of the open float, nil when hidden
+local overlay_buf = nil -- scratch buffer backing the float (reused across draws)
+local overlay_ns = vim.api.nvim_create_namespace "mru_cycle_overlay"
+
+-- Dismiss-on-keypress: while a session is active we observe typed keys via
+-- vim.on_key. Any key other than the cycle keys ends the session immediately
+-- (closing the float), so the switcher never lingers once you move on.
+local onkey_ns = vim.api.nvim_create_namespace "mru_cycle_onkey"
+local onkey_active = false
+local TAB_KEY = vim.api.nvim_replace_termcodes("<Tab>", true, false, true)
+local STAB_KEY = vim.api.nvim_replace_termcodes("<S-Tab>", true, false, true)
+
 -- True only for normal, listed file buffers. Excludes terminals, help,
 -- quickfix and plugin scratch buffers (oil, neo-tree, dashboard, …), which all
 -- carry a non-empty 'buftype', so they never enter the <Tab> cycle.
@@ -220,9 +235,112 @@ local function mru_buffers()
     return bufs
 end
 
-local function end_session()
+-- Display name for a buffer in the switcher: just the filename, or "[No Name]".
+local function overlay_label(bufnr)
+    local name = vim.api.nvim_buf_get_name(bufnr)
+    if name == "" then
+        return "[No Name]"
+    end
+    local label = vim.fn.fnamemodify(name, ":t")
+    if vim.bo[bufnr].modified then
+        label = label .. " ●"
+    end
+    return label
+end
+
+local function close_overlay()
+    if overlay_win and vim.api.nvim_win_is_valid(overlay_win) then
+        vim.api.nvim_win_close(overlay_win, true)
+    end
+    overlay_win = nil
+end
+
+-- Draw (or redraw) the switcher float for the current `snapshot`/`cycle_index`.
+local function draw_overlay()
+    if not snapshot or #snapshot < 2 then
+        close_overlay()
+        return
+    end
+
+    local lines = {}
+    local width = 0
+    for i, bufnr in ipairs(snapshot) do
+        local marker = (i == cycle_index) and "▶ " or "  "
+        local line = marker .. overlay_label(bufnr)
+        lines[i] = line
+        width = math.max(width, vim.fn.strdisplaywidth(line))
+    end
+    width = width + 2 -- breathing room on the right
+
+    if not (overlay_buf and vim.api.nvim_buf_is_valid(overlay_buf)) then
+        overlay_buf = vim.api.nvim_create_buf(false, true)
+    end
+    vim.bo[overlay_buf].modifiable = true
+    vim.api.nvim_buf_set_lines(overlay_buf, 0, -1, false, lines)
+    vim.bo[overlay_buf].modifiable = false
+
+    -- Highlight the row we're about to land on.
+    vim.api.nvim_buf_clear_namespace(overlay_buf, overlay_ns, 0, -1)
+    vim.api.nvim_buf_set_extmark(overlay_buf, overlay_ns, cycle_index - 1, 0, {
+        end_row = cycle_index,
+        hl_group = "Visual",
+        hl_eol = true,
+    })
+
+    local config = {
+        relative = "editor",
+        anchor = "NE",
+        row = 1,
+        col = vim.o.columns - 1,
+        width = width,
+        height = #lines,
+        style = "minimal",
+        border = "rounded",
+        title = " Buffers ",
+        title_pos = "left",
+        focusable = false,
+        noautocmd = true,
+    }
+    if overlay_win and vim.api.nvim_win_is_valid(overlay_win) then
+        config.noautocmd = nil -- not allowed when reconfiguring an existing win
+        vim.api.nvim_win_set_config(overlay_win, config)
+    else
+        overlay_win = vim.api.nvim_open_win(overlay_buf, false, config)
+    end
+end
+
+local end_session -- forward declaration; defined below, used by the key watcher
+
+-- Start observing keys so the next non-cycle keypress dismisses the session.
+local function start_dismiss_watch()
+    if onkey_active then
+        return
+    end
+    onkey_active = true
+    vim.on_key(function(key, typed)
+        if not snapshot then
+            return -- session already ended; teardown happens in end_session
+        end
+        local pressed = (typed ~= nil and typed ~= "") and typed or key
+        if pressed == TAB_KEY or pressed == STAB_KEY then
+            return -- our own cycle keys keep the session alive
+        end
+        vim.schedule(end_session)
+    end, onkey_ns)
+end
+
+local function stop_dismiss_watch()
+    if onkey_active then
+        vim.on_key(nil, onkey_ns)
+        onkey_active = false
+    end
+end
+
+end_session = function()
     snapshot = nil
     cycle_index = 1
+    close_overlay()
+    stop_dismiss_watch()
     if cycle_timer then
         cycle_timer:stop()
     end
@@ -260,6 +378,10 @@ local function cycle(step)
     if vim.api.nvim_buf_is_valid(target) then
         vim.api.nvim_set_current_buf(target)
     end
+    -- The overlay is purely cosmetic: never let a drawing error abort the
+    -- buffer switch above or the session bookkeeping below.
+    pcall(draw_overlay)
+    start_dismiss_watch()
     restart_timer()
 end
 
